@@ -123,48 +123,57 @@ const OrderFlowSimulator = () => {
   }, [instrument]);
 
   // Load sessions
-  useEffect(() => {
-    loadSessions();
-  }, []);
+ useEffect(() => {
+  loadSessions();
+}, []);
 
-  const loadSessions = async () => {
+const loadSessions = () => {
+  try {
+    const stored = localStorage.getItem('trading-sessions');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setSessions(parsed.sort((a, b) => 
+        new Date(b.startTime) - new Date(a.startTime)
+      ));
+    }
+  } catch (err) {
+    console.log('No previous sessions');
+  }
+};
+
+const saveSession = () => {
+  if (currentSession.trades.length > 0) {
     try {
-      const result = await window.storage.list('session:');
-      if (result?.keys) {
-        const loaded = await Promise.all(
-          result.keys.map(async (key) => {
-            const data = await window.storage.get(key);
-            return data ? JSON.parse(data.value) : null;
-          })
-        );
-        setSessions(loaded.filter(s => s).sort((a, b) => 
-          new Date(b.startTime) - new Date(a.startTime)
-        ));
+      // Get existing sessions
+      const stored = localStorage.getItem('trading-sessions');
+      const existingSessions = stored ? JSON.parse(stored) : [];
+      
+      // Update or add current session
+      const sessionIndex = existingSessions.findIndex(s => s.id === currentSession.id);
+      if (sessionIndex >= 0) {
+        existingSessions[sessionIndex] = currentSession;
+      } else {
+        existingSessions.push(currentSession);
       }
+      
+      // Save back to localStorage
+      localStorage.setItem('trading-sessions', JSON.stringify(existingSessions));
+      
+      // Update sessions state
+      setSessions(existingSessions.sort((a, b) => 
+        new Date(b.startTime) - new Date(a.startTime)
+      ));
     } catch (err) {
-      console.log('No previous sessions');
+      console.error('Save failed:', err);
     }
-  };
+  }
+};
 
-  const saveSession = async () => {
-    if (currentSession.trades.length > 0) {
-      try {
-        await window.storage.set(
-          `session:${currentSession.id}`,
-          JSON.stringify(currentSession)
-        );
-      } catch (err) {
-        console.error('Save failed:', err);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (currentSession.trades.length > 0) {
-      saveSession();
-    }
-  }, [currentSession]);
-
+useEffect(() => {
+  if (currentSession.trades.length > 0) {
+    saveSession();
+  }
+}, [currentSession]);
   // Playback
   useEffect(() => {
     if (isPlaying && currentIndex < data.length - 1) {
