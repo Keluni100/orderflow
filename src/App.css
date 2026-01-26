@@ -196,11 +196,15 @@ body {
 }
 
 /* Footprint Chart */
+/* Footprint Chart */
 .footprint-chart {
   background-color: #030712;
   border-radius: 6px;
   border: 1px solid #1f2937;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 600px; /* Fixed height for containment */
 }
 
 .footprint-header {
@@ -210,6 +214,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .footprint-header h3 {
@@ -223,15 +228,24 @@ body {
   color: #9ca3af;
 }
 
+.footprint-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
 .footprint-scroll {
+  position: absolute;
+  inset: 0;
   overflow-x: auto;
+  overflow-y: auto;
 }
 
 .footprint-bars {
   display: flex;
   min-width: max-content;
+  height: fit-content;
 }
-
 .bar-column {
   flex-shrink: 0;
   width: 70px;
@@ -542,6 +556,7 @@ body {
   justify-content: center;
   z-index: 1000;
   padding: 16px;
+  overflow-y: auto; /* Allow overlay to scroll if needed */
 }
 
 .modal {
@@ -550,14 +565,16 @@ body {
   border: 1px solid #374151;
   max-width: 1000px;
   width: 100%;
-  max-height: 85vh;
+  max-height: calc(100vh - 32px); /* Leave space for padding */
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin: auto; /* Center in overlay */
 }
 
 .settings-modal {
   max-width: 500px;
+  max-height: 600px; /* Smaller for settings */
 }
 
 .modal-header {
@@ -567,6 +584,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0; /* Don't shrink header */
 }
 
 .modal-header h2 {
@@ -596,9 +614,11 @@ body {
 
 .modal-content {
   padding: 16px;
-  overflow-y: auto;
-  flex: 1;
+  overflow-y: auto; /* Scroll INSIDE modal */
+  overflow-x: hidden;
+  flex: 1; /* Take remaining space */
 }
+
 
 .no-sessions {
   text-align: center;
@@ -746,4 +766,19 @@ body {
 .footprint-scroll::-webkit-scrollbar-thumb:hover,
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: #4b5563;
+}
+
+@media (max-width: 768px) {
+  .footprint-chart {
+    height: 400px; /* Shorter on mobile */
+  }
+  
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal {
+    max-height: calc(100vh - 16px);
+    margin: 8px;
+  }
 }

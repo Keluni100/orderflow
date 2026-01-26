@@ -279,7 +279,7 @@ const OrderFlowSimulator = () => {
         <div className="header">
           <div className="header-left">
             <div>
-              <h1 className="title">Order Flow Simulator</h1>
+              <h1 className="title">PumpMaster-DEMO</h1>
               <p className="session-id">Session #{currentSession.id}</p>
             </div>
             <select
@@ -352,8 +352,9 @@ const OrderFlowSimulator = () => {
                 </div>
               </div>
               
-              <div className="footprint-scroll">
-                <div className="footprint-bars">
+              <div className="footprint-container">
+                <div className="footprint-scroll">
+                  <div className="footprint-bars">
                   {visibleBars.map((bar, barIdx) => {
                     const levels = generateFootprintLevels(bar);
                     const isCurrentBar = barIdx === visibleBars.length - 1;
@@ -402,6 +403,7 @@ const OrderFlowSimulator = () => {
                     );
                   })}
                 </div>
+              </div>
               </div>
             </div>
 
