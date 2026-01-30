@@ -22,7 +22,7 @@ body {
 }
 
 .app-wrapper {
-  max-width: 2000px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -921,6 +921,172 @@ body {
 
 .session-stat-value.negative {
   color: #f87171;
+}
+
+/* Trading Panel Styles */
+.trading-panel {
+  background-color: #111827;
+  border-radius: 6px;
+  border: 1px solid #1f2937;
+  padding: 12px;
+}
+
+.price-display {
+  background-color: #1f2937;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #374151;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.price-value.bid {
+  color: #f87171;
+}
+
+.price-value.ask {
+  color: #4ade80;
+}
+
+.price-value.spread {
+  color: #d1d5db;
+}
+
+.order-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.lot-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lot-input {
+  flex: 1;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+  font-family: monospace;
+}
+
+.lot-btn {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.lot-btn:hover {
+  background-color: #4b5563;
+}
+
+.lot-btn.plus {
+  background-color: #1e3a8a;
+  border-color: #1e40af;
+}
+
+.lot-btn.plus:hover {
+  background-color: #1e40af;
+}
+
+.lot-btn.minus {
+  background-color: #7f1d1d;
+  border-color: #991b1b;
+}
+
+.lot-btn.minus:hover {
+  background-color: #991b1b;
+}
+
+.trade-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0 12px 0;
+}
+
+.btn-buy {
+  background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+  border: 1px solid #166534;
+  border-radius: 6px;
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-buy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+}
+
+.btn-sell {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+  border: 1px solid #991b1b;
+  border-radius: 6px;
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-sell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+}
+
+.trade-note {
+  font-size: 10px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.4;
+  padding: 4px;
+  background-color: rgba(17, 24, 39, 0.5);
+  border-radius: 4px;
 }
 
 /* Settings Form */
