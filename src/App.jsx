@@ -384,7 +384,7 @@ const OrderFlowSimulator = () => {
         <div className="header">
           <div className="header-left">
             <div>
-              <h1 className="title">Order Flow Backtest Simulator</h1>
+              <h1 className="title">Order Flow Backtest Simulator !</h1>
               <p className="session-id">Session #{currentSession.id}</p>
             </div>
           </div>
