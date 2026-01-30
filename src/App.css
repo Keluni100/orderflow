@@ -1,4 +1,4 @@
-/* App.css - Production Styles for Order Flow Simulator */
+/* App.css - Production Styles for Order Flow Backtest Simulator */
 
 * {
   margin: 0;
@@ -11,6 +11,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 .app-container {
@@ -85,6 +86,176 @@ body {
 
 .header-btn:hover {
   background-color: #374151;
+}
+
+/* Strategy Setup Panel */
+.strategy-setup-panel {
+  background-color: #0a0a0a;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.strategy-setup-header {
+  margin-bottom: 24px;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 16px;
+}
+
+.strategy-setup-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.strategy-setup-header p {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.strategy-setup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.setup-section {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.setup-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.strategy-setup-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+  border-top: 1px solid #1f2937;
+}
+
+.btn-start-strategy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-start-strategy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Current Strategy Banner */
+.current-strategy-banner {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.strategy-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.strategy-label {
+  font-size: 12px;
+  color: #93c5fd;
+  font-weight: 500;
+}
+
+.strategy-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.strategy-meta {
+  font-size: 12px;
+  color: #bfdbfe;
+}
+
+.strategy-banner-right {
+  display: flex;
+  align-items: center;
+}
+
+.strategy-period {
+  font-size: 12px;
+  color: #bfdbfe;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 4px;
 }
 
 /* Main Grid */
@@ -196,7 +367,6 @@ body {
 }
 
 /* Footprint Chart */
-/* Footprint Chart */
 .footprint-chart {
   background-color: #030712;
   border-radius: 6px;
@@ -204,7 +374,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 600px; /* Fixed height for containment */
+  height: 600px;
 }
 
 .footprint-header {
@@ -246,6 +416,7 @@ body {
   min-width: max-content;
   height: fit-content;
 }
+
 .bar-column {
   flex-shrink: 0;
   width: 70px;
@@ -324,55 +495,6 @@ body {
   color: #fca5a5;
 }
 
-/* Trade Buttons */
-.trade-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.btn-buy,
-.btn-sell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-buy {
-  background-color: #15803d;
-}
-
-.btn-buy:hover:not(:disabled) {
-  background-color: #166534;
-}
-
-.btn-sell {
-  background-color: #b91c1c;
-}
-
-.btn-sell:hover:not(:disabled) {
-  background-color: #991b1b;
-}
-
-.btn-buy:disabled,
-.btn-sell:disabled {
-  background-color: #1f2937;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
-
 /* Sidebar */
 .sidebar {
   display: flex;
@@ -408,7 +530,8 @@ body {
 
 /* Stats Card */
 .stats-card,
-.trades-card {
+.trades-card,
+.strategies-card {
   background-color: #111827;
   border-radius: 6px;
   border: 1px solid #1f2937;
@@ -459,6 +582,80 @@ body {
 .stat-note {
   font-size: 10px;
   color: #6b7280;
+}
+
+/* Session Strategies List */
+.strategies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.strategy-item {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.strategy-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.strategy-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.strategy-item-grade {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.strategy-item-grade.grade-a\*,
+.strategy-item-grade.grade-a {
+  color: #4ade80;
+}
+
+.strategy-item-grade.grade-b {
+  color: #facc15;
+}
+
+.strategy-item-grade.grade-c,
+.strategy-item-grade.grade-d,
+.strategy-item-grade.grade-f,
+.strategy-item-grade.grade-n\/a {
+  color: #f87171;
+}
+
+.strategy-item-details {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.strategy-item-meta {
+  margin-bottom: 4px;
+}
+
+.strategy-item-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.strategy-item-stats .positive {
+  color: #4ade80;
+}
+
+.strategy-item-stats .negative {
+  color: #f87171;
 }
 
 /* Trades List */
@@ -527,6 +724,13 @@ body {
   gap: 2px;
 }
 
+.trade-order-type {
+  font-size: 8px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
 .trade-profit {
   font-weight: 600;
 }
@@ -556,7 +760,7 @@ body {
   justify-content: center;
   z-index: 1000;
   padding: 16px;
-  overflow-y: auto; /* Allow overlay to scroll if needed */
+  overflow-y: auto;
 }
 
 .modal {
@@ -565,16 +769,16 @@ body {
   border: 1px solid #374151;
   max-width: 1000px;
   width: 100%;
-  max-height: calc(100vh - 32px); /* Leave space for padding */
+  max-height: calc(100vh - 32px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin: auto; /* Center in overlay */
+  margin: auto;
 }
 
 .settings-modal {
   max-width: 500px;
-  max-height: 600px; /* Smaller for settings */
+  max-height: 600px;
 }
 
 .modal-header {
@@ -584,7 +788,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0; /* Don't shrink header */
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -614,11 +818,10 @@ body {
 
 .modal-content {
   padding: 16px;
-  overflow-y: auto; /* Scroll INSIDE modal */
+  overflow-y: auto;
   overflow-x: hidden;
-  flex: 1; /* Take remaining space */
+  flex: 1;
 }
-
 
 .no-sessions {
   text-align: center;
@@ -682,6 +885,20 @@ body {
   color: #f87171;
 }
 
+.session-strategy-info {
+  margin-bottom: 12px;
+  padding: 8px;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.session-strategy-label {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
 .session-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -713,36 +930,9 @@ body {
   gap: 16px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.form-group label {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.form-input,
-.form-select {
-  width: 100%;
-  background-color: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-.form-input:focus,
-.form-select:focus {
-  outline: none;
-  border-color: #3b82f6;
-}
-
 /* Scrollbar Styling */
 .trades-list::-webkit-scrollbar,
+.strategies-list::-webkit-scrollbar,
 .footprint-scroll::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar {
   width: 8px;
@@ -750,12 +940,14 @@ body {
 }
 
 .trades-list::-webkit-scrollbar-track,
+.strategies-list::-webkit-scrollbar-track,
 .footprint-scroll::-webkit-scrollbar-track,
 .modal-content::-webkit-scrollbar-track {
   background: #111827;
 }
 
 .trades-list::-webkit-scrollbar-thumb,
+.strategies-list::-webkit-scrollbar-thumb,
 .footprint-scroll::-webkit-scrollbar-thumb,
 .modal-content::-webkit-scrollbar-thumb {
   background: #374151;
@@ -763,14 +955,16 @@ body {
 }
 
 .trades-list::-webkit-scrollbar-thumb:hover,
+.strategies-list::-webkit-scrollbar-thumb:hover,
 .footprint-scroll::-webkit-scrollbar-thumb:hover,
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: #4b5563;
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .footprint-chart {
-    height: 400px; /* Shorter on mobile */
+    height: 400px;
   }
   
   .main-grid {
@@ -780,5 +974,13 @@ body {
   .modal {
     max-height: calc(100vh - 16px);
     margin: 8px;
+  }
+  
+  .strategy-setup-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
