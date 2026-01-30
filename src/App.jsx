@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Plus, History, Settings } from 'lucide-react';
+import { Play, Pause, RotateCcw, Plus, History, Settings, ChevronUp, ChevronDown } from 'lucide-react';
 import './App.css';
 
 // Realistic market data generator
@@ -46,7 +46,10 @@ const generateMarketData = (instrument, bars = 500) => {
       volume: totalVolume,
       bidVolume,
       askVolume,
-      profile
+      profile,
+      // Add bid and ask for trading
+      bid: parseFloat((close - profile.spread / 2).toFixed(profile.tickSize >= 1 ? 0 : 4)),
+      ask: parseFloat((close + profile.spread / 2).toFixed(profile.tickSize >= 1 ? 0 : 4))
     });
 
     time += 5 * 60000;
@@ -90,6 +93,8 @@ const OrderFlowSimulator = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1000);
+  const [lotSize, setLotSize] = useState(0.1);
+  const [orderType, setOrderType] = useState('market');
   
   const [account, setAccount] = useState({
     balance: 10000,
@@ -221,18 +226,34 @@ const OrderFlowSimulator = () => {
     const profile = entryBar.profile;
 
     let actualEntryPrice = price;
+    let orderExecuted = true;
 
     if (orderType === 'limit') {
       const limit = limitPrice || price;
-      if (isBuy && exitBar.low > limit) return;
-      if (!isBuy && exitBar.high < limit) return;
-      actualEntryPrice = limit;
+      // For BUY limit: execute if price goes DOWN to our limit (exitBar.low <= limit)
+      // For SELL limit: execute if price goes UP to our limit (exitBar.high >= limit)
+      if (isBuy) {
+        orderExecuted = exitBar.low <= limit;
+        if (orderExecuted) actualEntryPrice = limit;
+      } else {
+        orderExecuted = exitBar.high >= limit;
+        if (orderExecuted) actualEntryPrice = limit;
+      }
     } else if (orderType === 'stop-loss') {
       const stop = stopPrice || price;
-      if (isBuy && exitBar.high < stop) return;
-      if (!isBuy && exitBar.low > stop) return;
-      actualEntryPrice = stop;
+      // For BUY stop: execute if price goes UP to our stop (exitBar.high >= stop)
+      // For SELL stop: execute if price goes DOWN to our stop (exitBar.low <= stop)
+      if (isBuy) {
+        orderExecuted = exitBar.high >= stop;
+        if (orderExecuted) actualEntryPrice = stop;
+      } else {
+        orderExecuted = exitBar.low <= stop;
+        if (orderExecuted) actualEntryPrice = stop;
+      }
     }
+
+    // If order didn't execute (for limit/stop orders), return without creating trade
+    if (orderType !== 'market' && !orderExecuted) return;
 
     const exitPrice = exitBar.close;
     const contractSize = profile.lotSize * lots;
@@ -336,6 +357,22 @@ const OrderFlowSimulator = () => {
     
     setIsPlaying(false);
     setShowStrategySetup(true);
+  };
+
+  const handleBuy = () => {
+    const currentBar = data[currentIndex];
+    if (!currentBar) return;
+    
+    const price = orderType === 'market' ? currentBar.ask : currentBar.close;
+    executeTrade(price, true, lotSize, orderType);
+  };
+
+  const handleSell = () => {
+    const currentBar = data[currentIndex];
+    if (!currentBar) return;
+    
+    const price = orderType === 'market' ? currentBar.bid : currentBar.close;
+    executeTrade(price, false, lotSize, orderType);
   };
 
   const visibleBars = data.slice(Math.max(0, currentIndex - 25), currentIndex + 1);
@@ -593,7 +630,7 @@ const OrderFlowSimulator = () => {
                 <div className="footprint-header">
                   <h3>Footprint Chart - {instrument}</h3>
                   <div className="current-price">
-                    {currentBar && `Price: ${currentBar.close.toFixed(currentBar.profile.tickSize >= 1 ? 0 : 4)}`}
+                    {currentBar && `Bid: ${currentBar.bid.toFixed(currentBar.profile.tickSize >= 1 ? 0 : 4)} | Ask: ${currentBar.ask.toFixed(currentBar.profile.tickSize >= 1 ? 0 : 4)}`}
                   </div>
                 </div>
                 
@@ -619,10 +656,10 @@ const OrderFlowSimulator = () => {
                                     key={levelIdx}
                                     onClick={() => {
                                       if (isCurrentBar) {
-                                        const orderType = strategy.orderType;
+                                        const strategyOrderType = strategy.orderType;
                                         const limitPrice = strategy.orderType === 'limit' ? level.price : null;
                                         const stopPrice = strategy.orderType === 'stop-loss' ? level.price : null;
-                                        executeTrade(level.price, isPositiveDelta, 0.1, orderType, limitPrice, stopPrice);
+                                        executeTrade(level.price, isPositiveDelta, lotSize, strategyOrderType, limitPrice, stopPrice);
                                       }
                                     }}
                                     disabled={!isCurrentBar}
@@ -657,6 +694,89 @@ const OrderFlowSimulator = () => {
             </div>
 
             <div className="sidebar">
+              {/* Trading Panel - NEW ADDITION */}
+              <div className="trading-panel">
+                <h3 className="card-title">TRADE EXECUTION</h3>
+                
+                <div className="price-display">
+                  <div className="price-row">
+                    <span className="price-label">Bid</span>
+                    <span className="price-value bid">{currentBar?.bid.toFixed(currentBar?.profile.tickSize >= 1 ? 0 : 4)}</span>
+                  </div>
+                  <div className="price-row">
+                    <span className="price-label">Ask</span>
+                    <span className="price-value ask">{currentBar?.ask.toFixed(currentBar?.profile.tickSize >= 1 ? 0 : 4)}</span>
+                  </div>
+                  <div className="price-row">
+                    <span className="price-label">Spread</span>
+                    <span className="price-value spread">{currentBar?.profile?.spread.toFixed(4)}</span>
+                  </div>
+                </div>
+                
+                <div className="order-controls">
+                  <div className="form-group">
+                    <label>Order Type</label>
+                    <select
+                      value={orderType}
+                      onChange={(e) => setOrderType(e.target.value)}
+                      className="form-select"
+                    >
+                      <option value="market">Market Order</option>
+                      <option value="limit">Limit Order</option>
+                      <option value="stop-loss">Stop Order</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Lot Size</label>
+                    <div className="lot-control">
+                      <button 
+                        className="lot-btn minus"
+                        onClick={() => setLotSize(prev => Math.max(0.1, prev - 0.1))}
+                      >
+                        <ChevronDown size={12} />
+                      </button>
+                      <input
+                        type="number"
+                        value={lotSize}
+                        onChange={(e) => setLotSize(parseFloat(e.target.value) || 0.1)}
+                        className="lot-input"
+                        step="0.1"
+                        min="0.1"
+                        max="10"
+                      />
+                      <button 
+                        className="lot-btn plus"
+                        onClick={() => setLotSize(prev => Math.min(10, prev + 0.1))}
+                      >
+                        <ChevronUp size={12} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="trade-buttons">
+                  <button 
+                    className="btn-buy"
+                    onClick={handleBuy}
+                  >
+                    BUY {orderType.toUpperCase()}
+                  </button>
+                  <button 
+                    className="btn-sell"
+                    onClick={handleSell}
+                  >
+                    SELL {orderType.toUpperCase()}
+                  </button>
+                </div>
+                
+                <div className="trade-note">
+                  {orderType === 'market' ? 'Market orders execute immediately at current price' :
+                   orderType === 'limit' ? 'Limit orders wait for price to reach your level' :
+                   'Stop orders trigger when price breaks your level'}
+                </div>
+              </div>
+
               <div className="grade-card">
                 <div className="grade-label">Performance Grade</div>
                 <div className="grade-value">{currentSession.grade}</div>
@@ -742,7 +862,7 @@ const OrderFlowSimulator = () => {
                   ))}
                   {currentSession.trades.length === 0 && (
                     <div className="no-trades">
-                      Click price levels on the footprint chart to execute trades based on your strategy
+                      Use BUY/SELL buttons or click price levels to execute trades
                     </div>
                   )}
                 </div>
