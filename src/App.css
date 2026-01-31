@@ -261,7 +261,7 @@ body {
 /* Main Grid */
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
