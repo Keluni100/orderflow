@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Plus, History, Settings, ChevronUp, ChevronDown } from 'lucide-react';
 import './App.css';
-
+import { Analytics } from "@vercel/analytics/next"
 // Realistic market data generator
 const generateMarketData = (instrument, bars = 500) => {
   const profiles = {
