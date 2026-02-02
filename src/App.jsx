@@ -5,11 +5,11 @@ import { Analytics } from "@vercel/analytics/next"
 // Realistic market data generator
 const generateMarketData = (instrument, bars = 500) => {
   const profiles = {
-    'EURUSD': { basePrice: 1.0850, volatility: 0.0003, spread: 0.00015, tickSize: 0.0001, lotSize: 100000 },
-    'GBPUSD': { basePrice: 1.2650, volatility: 0.0004, spread: 0.0002, tickSize: 0.0001, lotSize: 100000 },
-    'BTCUSD': { basePrice: 45000, volatility: 0.015, spread: 5, tickSize: 1, lotSize: 1 },
-    'XAUUSD': { basePrice: 2050, volatility: 0.008, spread: 0.5, tickSize: 0.1, lotSize: 100 },
-    'NQ': { basePrice: 16500, volatility: 0.005, spread: 0.25, tickSize: 0.25, lotSize: 20 }
+    'US1': { basePrice: 1.0850, volatility: 0.0003, spread: 0.00015, tickSize: 0.0001, lotSize: 100000 },
+    'EU1': { basePrice: 1.2650, volatility: 0.0004, spread: 0.0002, tickSize: 0.0001, lotSize: 100000 },
+    'FX1': { basePrice: 45000, volatility: 0.015, spread: 5, tickSize: 1, lotSize: 1 },
+    'XP1': { basePrice: 2050, volatility: 0.008, spread: 0.5, tickSize: 0.1, lotSize: 100 },
+    'GC1': { basePrice: 16500, volatility: 0.005, spread: 0.25, tickSize: 0.25, lotSize: 20 }
   };
 
   const profile = profiles[instrument];
@@ -419,11 +419,11 @@ const OrderFlowSimulator = () => {
                       onChange={(e) => setInstrument(e.target.value)}
                       className="form-select"
                     >
-                      <option value="EURUSD">EUR/USD</option>
-                      <option value="GBPUSD">GBP/USD</option>
-                      <option value="BTCUSD">BTC/USD</option>
-                      <option value="XAUUSD">XAU/USD (Gold)</option>
-                      <option value="NQ">NQ (Nasdaq)</option>
+                      <option value="EU1">EU1</option>
+                      <option value="US1">US1</option>
+                      <option value="BT1">BT1</option>
+                      <option value="GC1">GC1</option>
+                      <option value="FX1">FX1</option>
                     </select>
                   </div>
                   <div className="form-group">
